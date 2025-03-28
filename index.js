@@ -69,6 +69,46 @@ const resolvers = {
       return db.games.find((g) => g.id === parent.game_id);
     }
   },
+  Mutation:{
+    deleteGame(_, args){
+      if (args.id === null || args.id === undefined || args.id == "") {
+        throw new GraphQLError("Invalid game ID provided", {
+          extensions: {
+            code: "BAD_USER_INPUT",
+          },
+        });
+      }
+      var id = parseInt(args.id);
+      db.games = db.games.filter((g) => g.id !== id)
+      return db.games
+    },
+    addGame(_,args){
+      let game ={
+        ...args.game,
+        id: Math.floor(Math.random() *10000)
+      }
+      db.games.push(game)
+      return game
+    },
+    updateGame(_,args){
+      if (args.id === null || args.id === undefined || args.id == "") {
+        throw new GraphQLError("Invalid game ID provided", {
+          extensions: {
+            code: "BAD_USER_INPUT",
+          },
+        });
+      }
+      var id = parseInt(args.id);
+      db.games = db.games.map((g)=>{
+        if(g.id === id){
+          g.platform = args.edits.platform 
+          g.title = args.edits.title
+          return {...g, ...args.edits}
+        }
+        return g
+      })
+    }
+  }
 }
 
 // server setup
