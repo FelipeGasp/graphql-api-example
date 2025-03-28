@@ -18,7 +18,7 @@ const resolvers = {
       return db.authors;
     },
     review(_, args) {
-      if (args.id  === null || args.id  === undefined || args.id  == "") {
+      if (args.id === null || args.id === undefined || args.id == "") {
         throw new GraphQLError("Invalid review ID provided", {
           extensions: {
             code: "BAD_USER_INPUT",
@@ -29,7 +29,7 @@ const resolvers = {
       return db.reviews.find((review) => review.id === id);
     },
     game(_, args) {
-      if (args.id === null || args.id  === undefined || args.id  == "") {
+      if (args.id === null || args.id === undefined || args.id == "") {
         throw new GraphQLError("Invalid game ID provided", {
           extensions: {
             code: "BAD_USER_INPUT",
@@ -40,7 +40,7 @@ const resolvers = {
       return db.games.find((game) => game.id === id);
     },
     author(_, args) {
-      if (args.id  === null || args.id  === undefined || args.id  == "") {
+      if (args.id === null || args.id === undefined || args.id == "") {
         throw new GraphQLError("Invalid author ID provided", {
           extensions: {
             code: "BAD_USER_INPUT",
@@ -56,7 +56,20 @@ const resolvers = {
       return db.reviews.filter((r) => r.game_id === parent.id);
     }
   },
-};
+  Author: {
+    reviews(parent) {
+      return db.reviews.filter(r => r.author_id === parent.id);
+    }
+  },
+  Review: {
+    author(parent) {
+      return db.authors.find((a) => a.id === parent.author_id);
+    },
+    game(parent) {
+      return db.games.find((g) => g.id === parent.game_id);
+    }
+  },
+}
 
 // server setup
 const server = new ApolloServer({
