@@ -99,14 +99,17 @@ const resolvers = {
         });
       }
       var id = parseInt(args.id);
+      // vou inicializar um jogo com nulo para retornar ele mais tarde
+      let updatedGame = null;
       db.games = db.games.map((g)=>{
         if(g.id === id){
-          g.platform = args.edits.platform 
-          g.title = args.edits.title
-          return {...g, ...args.edits}
+          g.platform = args.edits?.platform ?? g.platform;
+          g.title = args.edits?.title ?? g.title
+          updatedGame = {...g, ...args.edits}
         }
         return g
       })
+      return db.games.find((g) => g.id === id);
     }
   }
 }
